@@ -1,4 +1,4 @@
-package ru.alexnimas.mvvmrecipeapp.model
+package ru.alexnimas.mvvmrecipeapp.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
