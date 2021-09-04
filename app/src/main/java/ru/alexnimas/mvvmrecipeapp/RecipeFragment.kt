@@ -23,7 +23,7 @@ class RecipeFragment : Fragment() {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(text = "Recipe Fragment")
+                    Text(text = "ru.alexnimas.mvvmrecipeapp.model.Recipe Fragment")
                 }
             }
         }

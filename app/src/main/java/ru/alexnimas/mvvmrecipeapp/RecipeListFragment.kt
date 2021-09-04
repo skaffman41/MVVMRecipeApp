@@ -27,7 +27,7 @@ class RecipeListFragment : Fragment() {
             setContent {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Recipe List",
+                        text = "ru.alexnimas.mvvmrecipeapp.model.Recipe List",
                         fontSize = 40.sp
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
@@ -36,7 +36,7 @@ class RecipeListFragment : Fragment() {
                             findNavController().navigate(R.id.viewRecipe)
                         }
                     ) {
-                        Text(text = "To Recipe Fragment")
+                        Text(text = "To ru.alexnimas.mvvmrecipeapp.model.Recipe Fragment")
                     }
                 }
             }
