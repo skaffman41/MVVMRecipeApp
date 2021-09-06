@@ -1,4 +1,4 @@
-package ru.alexnimas.mvvmrecipeapp
+package ru.alexnimas.mvvmrecipeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,9 +14,15 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
+import ru.alexnimas.mvvmrecipeapp.R
 
+@AndroidEntryPoint
 class RecipeListFragment : Fragment() {
+
+    private val viewModel: RecipeListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
