@@ -3,7 +3,7 @@ package ru.alexnimas.mvvmrecipeapp.network
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
-import ru.alexnimas.mvvmrecipeapp.network.model.RecipeNetworkEntity
+import ru.alexnimas.mvvmrecipeapp.network.model.RecipeDto
 import ru.alexnimas.mvvmrecipeapp.network.responses.RecipeSearchResponse
 
 interface RecipeService {
@@ -18,5 +18,5 @@ interface RecipeService {
     suspend fun get(
         @Header("Authorization") token: String,
         @Query("id") id: Int
-    ): RecipeNetworkEntity
+    ): RecipeDto
 }
