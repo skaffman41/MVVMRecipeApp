@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -36,9 +37,11 @@ class RecipeListFragment : Fragment() {
             setContent {
                 val recipes = viewModel.recipes.value
 
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                ) {
                     itemsIndexed(items = recipes) { index, recipe ->
-                        RecipeCard(recipe = recipe) {}
+                        RecipeCard(recipe = recipe) { }
                     }
                 }
             }
