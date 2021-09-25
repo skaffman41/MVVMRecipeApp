@@ -1,15 +1,12 @@
 package ru.alexnimas.mvvmrecipeapp.presentation.ui.recipe_list
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.alexnimas.mvvmrecipeapp.domain.model.Recipe
-import ru.alexnimas.mvvmrecipeapp.network.model.RecipeDtoMapper
 import ru.alexnimas.mvvmrecipeapp.repository.RecipeRepository
 import javax.inject.Inject
 
@@ -18,13 +15,15 @@ class RecipeListViewModel @Inject constructor(
     private val repository: RecipeRepository
 ) : ViewModel() {
 
-    val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
+    val recipes = mutableStateOf<List<Recipe>>(ArrayList())
 
     val query = mutableStateOf("")
 
-    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
+    val selectedCategory = mutableStateOf<FoodCategory?>(null)
 
     var categoryScrollPosition: Float = 0f
+
+    val loading = mutableStateOf(false)
 
     init {
         newSearch()
@@ -32,12 +31,28 @@ class RecipeListViewModel @Inject constructor(
 
     fun newSearch() {
         viewModelScope.launch {
+            loading.value = true
+
+            resetSearchState()
+
+            delay(2000)
+
             val result = repository.search(
                 page = 1,
                 query = query.value
             )
             recipes.value = result
+            loading.value = false
         }
+    }
+
+    private fun resetSearchState() {
+        recipes.value = listOf()
+        if (selectedCategory.value?.value != query.value) clearSelectedCategory()
+    }
+
+    private fun clearSelectedCategory() {
+        selectedCategory.value = null
     }
 
     fun onQueryChanged(query: String) {
