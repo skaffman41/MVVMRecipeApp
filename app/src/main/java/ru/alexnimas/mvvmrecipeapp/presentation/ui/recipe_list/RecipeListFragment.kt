@@ -37,41 +37,47 @@ class RecipeListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val composeView = ComposeView(requireContext())
-        composeView.setContent {
+        return ComposeView(requireContext()).apply {
+            setContent {
 
-            val recipes = viewModel.recipes.value
+                val recipes = viewModel.recipes.value
 
-            val query = viewModel.query.value
+                val query = viewModel.query.value
 
-            val selectedCategory = viewModel.selectedCategory.value
+                val selectedCategory = viewModel.selectedCategory.value
 
-            val loading = viewModel.loading.value
+                val categoryScrollPosition = viewModel.categoryScrollPosition
 
-            Column {
+                val loading = viewModel.loading.value
 
-                SearchAppBar(
-                    query = query,
-                    onQueryChanged = viewModel::onQueryChanged,
-                    onExecuteSearch = viewModel::newSearch,
-                    categories = getAllFoodCategories(),
-                    selectedCategory = selectedCategory,
-                    onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                    scrollPosition = viewModel.categoryScrollPosition,
-                    onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
-                )
-                Box(modifier = Modifier.fillMaxSize()) {
-                    LazyColumn {
-                        itemsIndexed(
-                            items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(recipe = recipe, onClick = {})
+                Column {
+
+                    SearchAppBar(
+                        query = query,
+                        onQueryChanged = viewModel::onQueryChanged,
+                        onExecuteSearch = viewModel::newSearch,
+                        categories = getAllFoodCategories(),
+                        selectedCategory = selectedCategory,
+                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                        scrollPosition = categoryScrollPosition,
+                        onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                    )
+
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        LazyColumn {
+                            itemsIndexed(
+                                items = recipes
+                            ) { index, recipe ->
+                                RecipeCard(recipe = recipe, onClick = {})
+                            }
                         }
+                        CircularProgressBar(isDisplayed = loading, verticalBias = 0.3f)
                     }
-                    CircularProgressBar(isDisplayed = loading)
+
+
                 }
             }
         }
-        return composeView
     }
+
 }
