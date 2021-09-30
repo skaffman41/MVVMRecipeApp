@@ -22,10 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import ru.alexnimas.mvvmrecipeapp.presentation.components.CircularProgressBar
-import ru.alexnimas.mvvmrecipeapp.presentation.components.FoodCategoryChip
-import ru.alexnimas.mvvmrecipeapp.presentation.components.RecipeCard
-import ru.alexnimas.mvvmrecipeapp.presentation.components.SearchAppBar
+import ru.alexnimas.mvvmrecipeapp.presentation.components.*
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
@@ -64,17 +61,19 @@ class RecipeListFragment : Fragment() {
                     )
 
                     Box(modifier = Modifier.fillMaxSize()) {
-                        LazyColumn {
-                            itemsIndexed(
-                                items = recipes
-                            ) { index, recipe ->
-                                RecipeCard(recipe = recipe, onClick = {})
+                        if (loading){
+                            LoadingRecipeListShimmer(imageHeight = 250.dp,)
+                        }else{
+                            LazyColumn {
+                                itemsIndexed(
+                                    items = recipes
+                                ) { index, recipe ->
+                                    RecipeCard(recipe = recipe, onClick = {})
+                                }
                             }
                         }
                         CircularProgressBar(isDisplayed = loading, verticalBias = 0.3f)
                     }
-
-
                 }
             }
         }
