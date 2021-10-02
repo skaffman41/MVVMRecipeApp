@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ScrollableRow
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -22,10 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import ru.alexnimas.mvvmrecipeapp.presentation.App
 import ru.alexnimas.mvvmrecipeapp.presentation.components.*
+import ru.alexnimas.mvvmrecipeapp.presentation.theme.AppTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
+
+    @Inject
+    lateinit var application: App
 
     private val viewModel: RecipeListViewModel by viewModels()
 
@@ -37,42 +44,51 @@ class RecipeListFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
 
-                val recipes = viewModel.recipes.value
+                AppTheme(
+                    darkTheme = application.isDark.value
+                ) {
+                    val recipes = viewModel.recipes.value
 
-                val query = viewModel.query.value
+                    val query = viewModel.query.value
 
-                val selectedCategory = viewModel.selectedCategory.value
+                    val selectedCategory = viewModel.selectedCategory.value
 
-                val categoryScrollPosition = viewModel.categoryScrollPosition
+                    val categoryScrollPosition = viewModel.categoryScrollPosition
 
-                val loading = viewModel.loading.value
+                    val loading = viewModel.loading.value
 
-                Column {
+                    Column {
 
-                    SearchAppBar(
-                        query = query,
-                        onQueryChanged = viewModel::onQueryChanged,
-                        onExecuteSearch = viewModel::newSearch,
-                        categories = getAllFoodCategories(),
-                        selectedCategory = selectedCategory,
-                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                        scrollPosition = categoryScrollPosition,
-                        onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
-                    )
+                        SearchAppBar(
+                            query = query,
+                            onQueryChanged = viewModel::onQueryChanged,
+                            onExecuteSearch = viewModel::newSearch,
+                            categories = getAllFoodCategories(),
+                            selectedCategory = selectedCategory,
+                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                            scrollPosition = categoryScrollPosition,
+                            onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                            onToggleTheme = { application.toggleLightTheme() }
+                        )
 
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        if (loading){
-                            LoadingRecipeListShimmer(imageHeight = 250.dp,)
-                        }else{
-                            LazyColumn {
-                                itemsIndexed(
-                                    items = recipes
-                                ) { index, recipe ->
-                                    RecipeCard(recipe = recipe, onClick = {})
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = MaterialTheme.colors.background)
+                        ) {
+                            if (loading) {
+                                LoadingRecipeListShimmer(imageHeight = 250.dp)
+                            } else {
+                                LazyColumn {
+                                    itemsIndexed(
+                                        items = recipes
+                                    ) { index, recipe ->
+                                        RecipeCard(recipe = recipe, onClick = {})
+                                    }
                                 }
                             }
+                            CircularProgressBar(isDisplayed = loading, verticalBias = 0.3f)
                         }
-                        CircularProgressBar(isDisplayed = loading, verticalBias = 0.3f)
                     }
                 }
             }
