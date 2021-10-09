@@ -57,28 +57,29 @@ class RecipeListFragment : Fragment() {
 
                     val loading = viewModel.loading.value
 
-                    Column {
-
-                        SearchAppBar(
-                            query = query,
-                            onQueryChanged = viewModel::onQueryChanged,
-                            onExecuteSearch = viewModel::newSearch,
-                            categories = getAllFoodCategories(),
-                            selectedCategory = selectedCategory,
-                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                            scrollPosition = categoryScrollPosition,
-                            onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
-                            onToggleTheme = { application.toggleLightTheme() }
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = MaterialTheme.colors.background)
+                    Scaffold(
+                        topBar = {
+                            SearchAppBar(
+                                query = query,
+                                onQueryChanged = viewModel::onQueryChanged,
+                                onExecuteSearch = viewModel::newSearch,
+                                categories = getAllFoodCategories(),
+                                selectedCategory = selectedCategory,
+                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                                scrollPosition = categoryScrollPosition,
+                                onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                                onToggleTheme = {
+                                    application.toggleLightTheme()
+                                }
+                            )
+                        }
+                    ) {
+                        Box(modifier = Modifier
+                            .background(color = MaterialTheme.colors.surface)
                         ) {
-                            if (loading) {
-                                LoadingRecipeListShimmer(imageHeight = 250.dp)
-                            } else {
+                            if (loading){
+                                LoadingRecipeListShimmer(imageHeight = 250.dp,)
+                            }else{
                                 LazyColumn {
                                     itemsIndexed(
                                         items = recipes
@@ -89,6 +90,7 @@ class RecipeListFragment : Fragment() {
                             }
                             CircularProgressBar(isDisplayed = loading, verticalBias = 0.3f)
                         }
+
                     }
                 }
             }

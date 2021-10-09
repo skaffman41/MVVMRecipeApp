@@ -61,8 +61,8 @@ fun SearchAppBar(
                             softKeyboardController?.hideSoftwareKeyboard()
                         }
                     },
-                    textStyle = MaterialTheme.typography.button,
-                    backgroundColor = MaterialTheme.colors.surface
+                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                    backgroundColor = MaterialTheme.colors.surface,
                 )
                 ConstraintLayout(
                     modifier = Modifier.align(Alignment.CenterVertically)
@@ -70,7 +70,7 @@ fun SearchAppBar(
                     val menu = createRef()
                     IconButton(
                         onClick = onToggleTheme,
-                        modifier = Modifier.constrainAs(menu){
+                        modifier = Modifier.constrainAs(menu) {
                             end.linkTo(parent.end)
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
