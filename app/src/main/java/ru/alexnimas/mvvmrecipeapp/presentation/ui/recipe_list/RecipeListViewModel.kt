@@ -7,7 +7,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.alexnimas.mvvmrecipeapp.domain.model.Recipe
+import ru.alexnimas.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import ru.alexnimas.mvvmrecipeapp.repository.RecipeRepository
+import java.lang.Exception
 import javax.inject.Inject
 
 const val PAGE_SIZE = 30
@@ -35,7 +37,14 @@ class RecipeListViewModel @Inject constructor(
         newSearch()
     }
 
-    fun newSearch() {
+    fun onTriggerEvent(event: RecipeListEvent) {
+        when (event) {
+            is NewSearchEvent -> newSearch()
+            is NextPageEvent -> nextPage()
+        }
+    }
+
+    private fun newSearch() {
         viewModelScope.launch {
             loading.value = true
             resetSearchState()
@@ -49,7 +58,7 @@ class RecipeListViewModel @Inject constructor(
         }
     }
 
-    fun nextPage() {
+    private fun nextPage() {
         viewModelScope.launch {
             if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
                 loading.value = true
