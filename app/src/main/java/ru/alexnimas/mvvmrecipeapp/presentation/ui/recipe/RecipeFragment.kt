@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.alexnimas.mvvmrecipeapp.presentation.App
 import ru.alexnimas.mvvmrecipeapp.presentation.components.CircularProgressBar
 import ru.alexnimas.mvvmrecipeapp.presentation.components.DefaultSnackbar
+import ru.alexnimas.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
 import ru.alexnimas.mvvmrecipeapp.presentation.components.RecipeView
 import ru.alexnimas.mvvmrecipeapp.presentation.components.util.SnackbarController
 import ru.alexnimas.mvvmrecipeapp.presentation.theme.AppTheme
@@ -71,7 +72,7 @@ class RecipeFragment : Fragment() {
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
                             if (loading && recipe == null) {
-                                Text(text = "Loading...")
+                                LoadingRecipeShimmer(imageHeight = 260.dp)
                             } else {
                                 recipe?.let {
                                     if (it.id == 1) {
