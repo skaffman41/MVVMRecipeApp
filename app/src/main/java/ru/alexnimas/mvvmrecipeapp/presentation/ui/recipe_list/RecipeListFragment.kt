@@ -15,6 +15,7 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import ru.alexnimas.mvvmrecipeapp.R
 import ru.alexnimas.mvvmrecipeapp.presentation.App
 import ru.alexnimas.mvvmrecipeapp.presentation.components.RecipeList
 import ru.alexnimas.mvvmrecipeapp.presentation.components.SearchAppBar
@@ -34,7 +35,6 @@ class RecipeListFragment : Fragment() {
 
     private val viewModel: RecipeListViewModel by viewModels()
 
-    @ExperimentalMaterialApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,8 +49,6 @@ class RecipeListFragment : Fragment() {
 
                 val selectedCategory = viewModel.selectedCategory.value
 
-                val categoryScrollPosition = viewModel.categoryScrollPosition
-
                 val loading = viewModel.loading.value
 
                 val page = viewModel.page.value
@@ -58,10 +56,11 @@ class RecipeListFragment : Fragment() {
                 val scaffoldState = rememberScaffoldState()
 
                 AppTheme(
-                    darkTheme = application.isDark.value,
                     displayProgressBar = loading,
-                    scaffoldState = scaffoldState
+                    scaffoldState = scaffoldState,
+                    darkTheme = application.isDark.value,
                 ) {
+
                     Scaffold(
                         topBar = {
                             SearchAppBar(
@@ -83,8 +82,6 @@ class RecipeListFragment : Fragment() {
                                 categories = getAllFoodCategories(),
                                 selectedCategory = selectedCategory,
                                 onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                                scrollPosition = categoryScrollPosition,
-                                onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
                                 onToggleTheme = application::toggleLightTheme
                             )
                         },
@@ -100,9 +97,11 @@ class RecipeListFragment : Fragment() {
                             onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition,
                             page = page,
                             onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent) },
-                            navController = findNavController(),
-                            scaffoldState = scaffoldState,
-                            snackbarController = snackbarController,
+                            onNavigateToRecipeDetailScreen = {
+                                val bundle = Bundle()
+                                bundle.putInt("recipeId", it)
+                                findNavController().navigate(R.id.viewRecipe, bundle)
+                            }
                         )
                     }
                 }
