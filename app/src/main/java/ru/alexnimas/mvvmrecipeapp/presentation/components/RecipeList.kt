@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.alexnimas.mvvmrecipeapp.domain.model.Recipe
+import ru.alexnimas.mvvmrecipeapp.presentation.navigation.Screen
 import ru.alexnimas.mvvmrecipeapp.presentation.ui.recipe_list.PAGE_SIZE
 
 @ExperimentalMaterialApi
@@ -22,19 +23,18 @@ fun RecipeList(
     onChangeScrollPosition: (Int) -> Unit,
     page: Int,
     onTriggerNextPage: () -> Unit,
-    onNavigateToRecipeDetailScreen: (Int) -> Unit,
-){
-    Box(modifier = Modifier
-        .background(color = MaterialTheme.colors.surface)
+    onNavigateToRecipeDetailScreen: (String) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .background(color = MaterialTheme.colors.surface)
     ) {
         if (loading && recipes.isEmpty()) {
-            LoadingRecipeListShimmer(imageHeight = 250.dp,)
-        }
-        else if(recipes.isEmpty()){
+            LoadingRecipeListShimmer(imageHeight = 250.dp)
+        } else if (recipes.isEmpty()) {
             NothingHere()
-        }
-        else {
-            LazyColumn{
+        } else {
+            LazyColumn {
                 itemsIndexed(
                     items = recipes
                 ) { index, recipe ->
@@ -44,7 +44,9 @@ fun RecipeList(
                     }
                     RecipeCard(
                         recipe = recipe,
-                        onClick = { onNavigateToRecipeDetailScreen(recipe.id)
+                        onClick = {
+                            val route = "${Screen.Recipe.route}/${recipe.id}"
+                            onNavigateToRecipeDetailScreen(route)
                         }
                     )
                 }

@@ -9,9 +9,9 @@ import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.alexnimas.mvvmrecipeapp.presentation.navigation.Screen
@@ -30,30 +30,41 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = Screen.RecipeList.route) {
-                composable(route = Screen.RecipeList.route) { RecipeList(navBackStackEntry = it) }
-                composable(route = Screen.Recipe.route) { Recipe(navBackStackEntry = it) }
+                composable(
+                    route = "${Screen.RecipeList.route}/{recipeId}",
+                    arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                ) { RecipeList(navBackStackEntry = it, navController = navController) }
+                composable(route = Screen.Recipe.route) {
+                    Recipe(navBackStackEntry = it)
+                }
             }
         }
     }
 
     @Composable
-    private fun RecipeList(navBackStackEntry: NavBackStackEntry) {
+    private fun RecipeList(
+        navBackStackEntry: NavBackStackEntry,
+        navController: NavController
+    ) {
         val factory = HiltViewModelFactory(AmbientContext.current, navBackStackEntry)
         val viewModel: RecipeListViewModel = viewModel("RecipeListViewModel", factory)
         RecipeListScreen(
             isDarkTheme = (application as App).isDark.value,
             onToggleTheme = (application as App)::toggleLightTheme,
+            onNavigateRecipeScreen = navController::navigate,
             viewModel = viewModel
         )
     }
 
     @Composable
-    private fun Recipe(navBackStackEntry: NavBackStackEntry) {
+    private fun Recipe(
+        navBackStackEntry: NavBackStackEntry
+    ) {
         val factory = HiltViewModelFactory(AmbientContext.current, navBackStackEntry)
         val viewModel: RecipeViewModel = viewModel("RecipeDetailViewModel", factory)
         RecipeScreen(
             isDarkTheme = (application as App).isDark.value,
-            recipeId = 1,
+            recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
             viewModel = viewModel
         )
     }

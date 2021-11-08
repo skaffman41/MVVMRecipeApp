@@ -21,7 +21,7 @@ fun RecipeScreen(
     recipeId: Int?,
     viewModel: RecipeViewModel
 ) {
-    Text("RecipeDetail Screen: $recipeId")
+    Text("Recipe id: $recipeId")
 //    val loading = viewModel.loading.value
 //
 //    val recipe = viewModel.recipe.value

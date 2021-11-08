@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.alexnimas.mvvmrecipeapp.presentation.components.RecipeList
 import ru.alexnimas.mvvmrecipeapp.presentation.components.SearchAppBar
+import ru.alexnimas.mvvmrecipeapp.presentation.navigation.Screen
 import ru.alexnimas.mvvmrecipeapp.presentation.theme.AppTheme
 
 @ExperimentalCoroutinesApi
@@ -15,6 +16,7 @@ import ru.alexnimas.mvvmrecipeapp.presentation.theme.AppTheme
 fun RecipeListScreen(
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
+    onNavigateRecipeScreen: (String) -> Unit,
     viewModel: RecipeListViewModel
 ) {
     val recipes = viewModel.recipes.value
@@ -59,9 +61,7 @@ fun RecipeListScreen(
                 onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition,
                 page = page,
                 onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent) },
-                onNavigateToRecipeDetailScreen = {
-                    TODO()
-                }
+                onNavigateToRecipeDetailScreen = onNavigateRecipeScreen
             )
         }
     }
