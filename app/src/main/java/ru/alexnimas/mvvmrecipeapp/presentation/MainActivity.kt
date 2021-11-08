@@ -31,10 +31,12 @@ class MainActivity : AppCompatActivity() {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = Screen.RecipeList.route) {
                 composable(
-                    route = "${Screen.RecipeList.route}/{recipeId}",
-                    arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                    route = Screen.RecipeList.route
                 ) { RecipeList(navBackStackEntry = it, navController = navController) }
-                composable(route = Screen.Recipe.route) {
+                composable(
+                    route = "${Screen.Recipe.route}/{recipeId}",
+                    arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+                ) {
                     Recipe(navBackStackEntry = it)
                 }
             }
